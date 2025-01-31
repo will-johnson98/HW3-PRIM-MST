@@ -25,20 +25,61 @@ class Graph:
         with open(path) as f:
             return np.loadtxt(f, delimiter=',')
 
+    # def construct_mst(self):
+    #     """
+    
+    #     TODO: Given `self.adj_mat`, the adjacency matrix of a connected undirected graph, implement Prim's 
+    #     algorithm to construct an adjacency matrix encoding the minimum spanning tree of `self.adj_mat`. 
+            
+    #     `self.adj_mat` is a 2D numpy array of floats. Note that because we assume our input graph is
+    #     undirected, `self.adj_mat` is symmetric. Row i and column j represents the edge weight between
+    #     vertex i and vertex j. An edge weight of zero indicates that no edge exists. 
+        
+    #     This function does not return anything. Instead, store the adjacency matrix representation
+    #     of the minimum spanning tree of `self.adj_mat` in `self.mst`. We highly encourage the
+    #     use of priority queues in your implementation. Refer to the heapq module, particularly the 
+    #     `heapify`, `heappop`, and `heappush` functions.
+
+    #     """
+    #     self.mst = None
+
     def construct_mst(self):
         """
-    
-        TODO: Given `self.adj_mat`, the adjacency matrix of a connected undirected graph, implement Prim's 
-        algorithm to construct an adjacency matrix encoding the minimum spanning tree of `self.adj_mat`. 
-            
-        `self.adj_mat` is a 2D numpy array of floats. Note that because we assume our input graph is
-        undirected, `self.adj_mat` is symmetric. Row i and column j represents the edge weight between
-        vertex i and vertex j. An edge weight of zero indicates that no edge exists. 
+        Implements Prim's algorithm to construct a minimum spanning tree.
         
-        This function does not return anything. Instead, store the adjacency matrix representation
-        of the minimum spanning tree of `self.adj_mat` in `self.mst`. We highly encourage the
-        use of priority queues in your implementation. Refer to the heapq module, particularly the 
-        `heapify`, `heappop`, and `heappush` functions.
-
+        The algorithm works by:
+        1. Starting from an arbitrary vertex
+        2. Finding the minimum weight edge that connects the current tree to an unvisited vertex
+        3. Adding that edge to the MST
+        4. Repeating until all vertices are visited
+        
+        Uses a min-heap to efficiently find the minimum weight edge at each step.
         """
-        self.mst = None
+        n = len(self.adj_mat)
+        visited = [False] * n
+        self.mst = np.zeros((n, n))
+        
+        # Start from vertex 0
+        visited[0] = True
+        edges = []
+        
+        # Add all edges from starting vertex to heap
+        for j in range(n):
+            if self.adj_mat[0,j] > 0:  # Only add existing edges
+                heapq.heappush(edges, (self.adj_mat[0,j], 0, j))
+        
+        while edges:
+            weight, u, v = heapq.heappop(edges)
+            
+            if visited[v]:
+                continue
+                
+            # Add edge to MST
+            visited[v] = True
+            self.mst[u,v] = weight
+            self.mst[v,u] = weight  # Maintain symmetry for undirected graph
+            
+            # Add new edges from vertex v
+            for w in range(n):
+                if not visited[w] and self.adj_mat[v,w] > 0:
+                    heapq.heappush(edges, (self.adj_mat[v,w], v, w))
