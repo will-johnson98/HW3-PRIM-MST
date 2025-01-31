@@ -28,27 +28,24 @@ class Graph:
 
     def construct_mst(self):
         """
-        Implements Prim's algorithm to construct a minimum spanning tree.
+        Implements Prim's algorithm to construct a minimum spanning tree. 
+        I use a min-heap to find the minimum weight edge at each step.
         
         The algorithm works by:
         1. Starting from an arbitrary vertex
         2. Finding the minimum weight edge that connects the current tree to an unvisited vertex
         3. Adding that edge to the MST
         4. Repeating until all vertices are visited
-        
-        Uses a min-heap to efficiently find the minimum weight edge at each step.
         """
         n = len(self.adj_mat)
         visited = [False] * n
         self.mst = np.zeros((n, n))
         
-        # Start from vertex 0
         visited[0] = True
         edges = []
         
-        # Add all edges from starting vertex to heap
         for j in range(n):
-            if self.adj_mat[0,j] > 0:  # Only add existing edges
+            if self.adj_mat[0,j] > 0:
                 heapq.heappush(edges, (self.adj_mat[0,j], 0, j))
         
         while edges:
@@ -57,12 +54,10 @@ class Graph:
             if visited[v]:
                 continue
                 
-            # Add edge to MST
             visited[v] = True
             self.mst[u,v] = weight
-            self.mst[v,u] = weight  # Maintain symmetry for undirected graph
+            self.mst[v,u] = weight
             
-            # Add new edges from vertex v
             for w in range(n):
                 if not visited[w] and self.adj_mat[v,w] > 0:
                     heapq.heappush(edges, (self.adj_mat[v,w], v, w))

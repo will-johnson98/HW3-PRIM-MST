@@ -9,9 +9,9 @@ def check_mst(adj_mat: np.ndarray,
               expected_weight: int, 
               allowed_error: float = 0.0001):
     """
-    Validates the correctness of a minimum spanning tree.
+    Validates the mts/Graph class's ability to initiate a minimum spanning tree.
     
-    Key properties checked:
+    Specific checks:
     1. Total weight matches expected weight
     2. MST has exactly n-1 edges where n is number of vertices
     3. MST is symmetric (undirected)
@@ -23,21 +23,17 @@ def check_mst(adj_mat: np.ndarray,
 
     n = len(adj_mat)
     
-    # Check symmetry
     assert np.allclose(mst, mst.T), 'MST must be symmetric'
     
-    # Count edges and verify n-1 property
-    edge_count = np.sum(mst > 0) / 2  # Divide by 2 since matrix is symmetric
+    edge_count = np.sum(mst > 0) / 2
     assert edge_count == n - 1, f'MST must have exactly {n-1} edges, found {edge_count}'
     
-    # Verify edge weights exist in original graph
     for i in range(n):
         for j in range(i):
             if mst[i,j] > 0:
                 assert approx_equal(mst[i,j], adj_mat[i,j]), \
                     f'Edge weight {mst[i,j]} not found in original graph at position ({i},{j})'
     
-    # Check connectivity using BFS
     def is_connected(graph):
         visited = [False] * n
         queue = [0]
@@ -54,8 +50,7 @@ def check_mst(adj_mat: np.ndarray,
     
     assert is_connected(mst), 'MST must be connected'
     
-    # Check total weight
-    total = np.sum(mst) / 2  # Divide by 2 since matrix is symmetric
+    total = np.sum(mst) / 2
     assert approx_equal(total, expected_weight), f'Expected weight {expected_weight}, got {total}'
     
 
@@ -90,7 +85,7 @@ def test_mst_single_cell_data():
 
 def test_mst_student():
     """
-    Tests MST construction on a simple cycle graph.
+    Tests MST construction on a simple cyclic graph.
     The graph is a cycle with 4 vertices:
     
     A --1-- B
@@ -100,6 +95,8 @@ def test_mst_student():
     D --3-- C
     
     The MST should exclude the highest weight edge (4).
+    I used Claude to come up with the idea of using a cyclic graph, and to ensure the drawn 
+    graph above matched the np array below.
     """
     cycle = np.array([
         [0, 1, 0, 4],
