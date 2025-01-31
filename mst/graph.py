@@ -25,23 +25,6 @@ class Graph:
         with open(path) as f:
             return np.loadtxt(f, delimiter=',')
 
-    # def construct_mst(self):
-    #     """
-    
-    #     TODO: Given `self.adj_mat`, the adjacency matrix of a connected undirected graph, implement Prim's 
-    #     algorithm to construct an adjacency matrix encoding the minimum spanning tree of `self.adj_mat`. 
-            
-    #     `self.adj_mat` is a 2D numpy array of floats. Note that because we assume our input graph is
-    #     undirected, `self.adj_mat` is symmetric. Row i and column j represents the edge weight between
-    #     vertex i and vertex j. An edge weight of zero indicates that no edge exists. 
-        
-    #     This function does not return anything. Instead, store the adjacency matrix representation
-    #     of the minimum spanning tree of `self.adj_mat` in `self.mst`. We highly encourage the
-    #     use of priority queues in your implementation. Refer to the heapq module, particularly the 
-    #     `heapify`, `heappop`, and `heappush` functions.
-
-    #     """
-    #     self.mst = None
 
     def construct_mst(self):
         """
